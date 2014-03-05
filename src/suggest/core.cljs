@@ -35,7 +35,7 @@
     (let [content  (.. e -target -value)
           cursor   (.. e -target -selectionStart)
           left-of-cursor (subs content 0 cursor)
-          left-after-subs (str (string/replace left-of-cursor #"@\w*$" (first suggestions)) " ")
+          left-after-subs (str (string/replace left-of-cursor #"@\w*$" (first (:suggestions state))) " ")
           new-cursor (count left-after-subs)
           right-of-cursor (subs content cursor (count content))
           cur-word (re-find #"@\w*$" left-of-cursor)]
@@ -53,17 +53,20 @@
   (init-state [_]
     {:suggest nil
      :text    ""})
+  om/IWillUpdate
+  (will-update [this props next-state]
+     (om/set-state! this :suggestions
+                    (when-not (nil? (:suggest next-state)) (filter #(starts-with? % (:suggest next-state))
+                                                              (map #(str "@" %) (:listing props))))))
   om/IRenderState
   (render-state [this state]
-    (let [handles     (map #(str "@" %) (:listing app))
-          suggestions (when-not (nil? (:suggest state)) (filter #(starts-with? % (:suggest state)) handles))]
-      (dom/div #js {:className "suggest"}
-        (dom/textarea #js {:onChange #(handle-change % owner state)
-                           :onKeyDown #(handle-tab % owner state)
-                           :value (:text state)} nil)
-        (when suggestions
-          (apply dom/ul nil
-             (map (fn [t] (dom/li nil t)) suggestions))))))))
+    (dom/div #js {:className "suggest"}
+      (dom/textarea #js {:onChange #(handle-change % owner state)
+                         :onKeyDown #(handle-tab % owner state)
+                         :value (:text state)} nil)
+      (when (:suggestions state)
+        (apply dom/ul nil
+           (map (fn [t] (dom/li nil t)) (:suggestions state))))))))
 
 (om/root suggest-area app-state
   {:target (. js/document (getElementById "app"))})
