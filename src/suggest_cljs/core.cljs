@@ -82,7 +82,7 @@
       (dom/div #js {:className "suggest"}
         (dom/textarea #js {:onChange #(handle-change % owner state)
                            :onKeyDown #(handle-tab % owner state)
-;;                            :onBlur #(om/set-state! owner :suggest nil)
+                           :onBlur #(om/set-state! owner :suggest nil)
                            :value (:text state)} nil)
         (when (:suggestions state)
           (apply dom/ul #js {:className "suggestions"
