@@ -56,32 +56,44 @@
     (init-state [_]
       {:suggest nil
        :text    ""
+       :offset 0
        :active-idx -1})
+    om/IDidUpdate
+    (did-update [_ _ _]
+      (when (< -1 (om/get-state owner :active-idx))
+        (let [active-el (om/get-node owner "active-suggestion")
+              offset    (.-offsetLeft active-el)]
+          (om/set-state! owner :offset offset))))
+
     om/IWillUpdate
     (will-update [_ props next-state]
-       (cond
-         (nil? (:suggest next-state))
-         (do
-           (om/set-state! owner :suggestions [])
-           (om/set-state! owner :active-idx -1))
-         :else
-         (om/set-state! owner :suggestions
-                              (vec (filter #(starts-with? % (:suggest next-state))
-                                            (map #(str "@" %) (:listing props)))))))
+      (cond
+        (nil? (:suggest next-state))
+        (do
+          (om/set-state! owner :suggestions [])
+          (om/set-state! owner :active-idx -1))
+        :else
+        (om/set-state! owner :suggestions
+                             (vec (filter #(starts-with? % (:suggest next-state))
+                                           (map #(str "@" %) (:listing props)))))))
 
     om/IRenderState
     (render-state [this state]
       (dom/div #js {:className "suggest"}
         (dom/textarea #js {:onChange #(handle-change % owner state)
                            :onKeyDown #(handle-tab % owner state)
+;;                            :onBlur #(om/set-state! owner :suggest nil)
                            :value (:text state)} nil)
         (when (:suggestions state)
-          (apply dom/ul #js {:className "suggestions"}
+          (apply dom/ul #js {:className "suggestions"
+                             :style #js {:-webkit-transform (str "translateX(-" (:offset state) "px)")}}
              (map-indexed
                (fn [idx, t]
                  (cond
+                   (< idx (:active-idx state))
+                   (dom/li #js {:className "hidden"} t)
                    (or (= (:suggest state) t) (= idx (:active-idx state)))
-                   (dom/li #js {:className "active"} t)
+                   (dom/li #js {:className "active" :ref "active-suggestion"} t)
                    :else
                    (dom/li nil t)))
                (:suggestions state))))))))
