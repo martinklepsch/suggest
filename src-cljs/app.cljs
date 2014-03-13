@@ -1,4 +1,4 @@
-(ns suggest-cljs.core
+(ns suggest.app
   (:require [clojure.string :as string]
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]))
@@ -71,11 +71,13 @@
         (nil? (:suggest next-state))
         (do
           (om/set-state! owner :suggestions [])
+          (om/set-state! owner :offset 0)
           (om/set-state! owner :active-idx -1))
         :else
         (om/set-state! owner :suggestions
-                             (vec (filter #(starts-with? % (:suggest next-state))
-                                           (map #(str "@" %) (:listing props)))))))
+                             (vec (sort (filter #(starts-with? % (:suggest next-state))
+                                                 (map #(str "@" %) (:listing props))))))))
+
 
     om/IRenderState
     (render-state [this state]
