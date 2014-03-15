@@ -4,4 +4,4 @@
   (:gen-class))
 
 (defn -main [port]
-    (run-jetty handler {:port (Integer. port) :join? false}))
+    (run-jetty handler/app {:port (Integer. port) :join? false}))
