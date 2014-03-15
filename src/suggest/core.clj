@@ -3,5 +3,5 @@
   (:use ring.adapter.jetty)
   (:gen-class))
 
-(defn -main []
-  (run-jetty handler/app {:port 3000}))
+(defn -main [port]
+    (run-jetty handler {:port (Integer. port) :join? false}))
