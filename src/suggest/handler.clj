@@ -5,8 +5,9 @@
             [compojure.route :as route]))
 
 (defroutes app-routes
-  (GET "/" [] (res/file-response "index.html" {:root "resources/public"}))
-  (route/resources "/public")
+  (GET "/" [] 
+       (res/file-response "index.html" {:root "resources/public"}))
+  (route/resources "/assets")
   (route/not-found "Not Found"))
 
 (def app

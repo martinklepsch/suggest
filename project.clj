@@ -4,10 +4,11 @@
   :min-lein-version "2.0.0"
 
   :dependencies [[org.clojure/clojure "1.5.1"]
+                 [ring "1.2.2"]
                  [compojure "1.1.6"]
                  [org.clojure/clojurescript "0.0-2173"]
                  [org.clojure/core.async "0.1.267.0-0d7780-alpha"]
-                 [om "0.5.1"]
+                 [om "0.5.2"]
                  [garden "1.1.5"]]
 
   :plugins [[lein-cljsbuild "1.0.2"]
@@ -15,7 +16,9 @@
             [lein-ring "0.8.10"]
             [lein-garden "0.1.8"]]
 
-  :hooks [leiningen.cljsbuild]
+  ; :hooks [leiningen.cljsbuild]
+  :main suggest.core
+  :uberjar-name "suggest-standalone.jar"
 
   :source-paths ["src"]
   :resource-paths ["resources"]
@@ -25,12 +28,14 @@
   :garden {:builds [{;; Optional name of the build:
                      :id "dev"
                      ;; The var containing your stylesheet:
-                     :stylesheet suggest-clj.style/screen
+                     :stylesheet suggest.style/screen
                      ;; Compiler flags passed to `garden.core/css`:
                      :compiler {;; Where to save the file:
                                 :output-to "resources/public/screen.css"
                                 ;; Compress the output?
                                 :pretty-print? true}}]}
+
+  :aliases { "buildall" ["do" "clean," "cljsbuild" "once," "garden" "once," "uberjar"]}
 
   :cljsbuild {
     :builds [{:id "dev"

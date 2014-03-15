@@ -5,9 +5,11 @@
 
 (enable-console-print!)
 
-(def app-state (atom {:listing ["kambash" "jellea" "swannodette" "jensnikolaus" "janl" "jngo" "milesalex"
-                                "alper" "soulim" "lucdudler" "juzmcmuz" "mklappstuhl" "se" "jongold"
-                                "joecritchley" "nicolesimon" "somewhere" "conordelahunty" "henrikberggren"
+(def app-state (atom {:listing ["kambash" "jellea" "swannodette" "jensnikolaus"
+                                "janl" "jngo" "milesalex" "alper" "soulim"
+                                "lucdudler" "juzmcmuz" "mklappstuhl" "se"
+                                "jongold" "joecritchley" "nicolesimon"
+                                "somewhere" "conordelahunty" "henrikberggren"
                                 "espylaub" "gr2m"]}))
 
 (defn starts-with? [string pre]
