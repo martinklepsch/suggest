@@ -1,4 +1,4 @@
-(ns suggest.style
+(ns suggest-clj.style
   (:require [garden.def :refer [defstylesheet defstyles]]
             [garden.units :refer [em px]]))
 
