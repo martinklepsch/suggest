@@ -5,11 +5,6 @@
 
 (enable-console-print!)
 
-(def app-state (atom {:listing ["kambash" "jellea" "swannodette" "jensnikolaus" "janl" "jngo" "milesalex"
-                                "alper" "soulim" "lucdudler" "juzmcmuz" "mklappstuhl" "se" "jongold"
-                                "joecritchley" "nicolesimon" "somewhere" "conordelahunty" "henrikberggren"
-                                "espylaub" "gr2m"]}))
-
 (defn starts-with? [string pre]
   (let [m (re-pattern (str "^" pre))]
     (string? (re-find m string))))
@@ -71,11 +66,12 @@
         (nil? (:suggest next-state))
         (do
           (om/set-state! owner :suggestions [])
+          (om/set-state! owner :offset 0)
           (om/set-state! owner :active-idx -1))
         :else
         (om/set-state! owner :suggestions
-                             (vec (filter #(starts-with? % (:suggest next-state))
-                                           (map #(str "@" %) (:listing props)))))))
+                             (vec (sort (filter #(starts-with? % (:suggest next-state))
+                                           (map #(str "@" %) (:listing props))))))))
 
     om/IRenderState
     (render-state [this state]
@@ -97,6 +93,22 @@
                    :else
                    (dom/li nil t)))
                (:suggestions state))))))))
+
+; basic example
+(defn app-view [app owner]
+  (reify
+    om/IRender
+    (render [_]
+      (dom/div nil
+        (om/build omplete (sort (:listing appitems))
+          {:opts {:input-view items-view
+                  :completion-list-view (comp #{:create :update :delete} tx-tag)
+                  :completion-view :some/id}})))))
+
+(def app-state (atom {:listing ["kambash" "jellea" "swannodette" "jensnikolaus" "janl" "jngo" "milesalex"
+                                "alper" "soulim" "lucdudler" "juzmcmuz" "mklappstuhl" "se" "jongold"
+                                "joecritchley" "nicolesimon" "somewhere" "conordelahunty" "henrikberggren"
+                                "espylaub" "gr2m"]}))
 
 (om/root suggest-area app-state
   {:target (. js/document (getElementById "app"))})
