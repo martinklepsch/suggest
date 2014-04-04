@@ -1,6 +1,6 @@
-(defproject suggest "0.1.0-SNAPSHOT"
-  :description "FIXME: write this!"
-  :url "http://example.com/FIXME"
+(defproject omplete "0.1.0"
+  :description "a reusable component for @-triggered autocompletions"
+  :url "https://github.com/mklappstuhl/omplete"
 
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/clojurescript "0.0-2173"]
@@ -26,9 +26,9 @@
 
   :cljsbuild {
     :builds [{:id "suggest"
-              :source-paths ["src/suggest_cljs"]
+              :source-paths ["src/omplete"]
               :compiler {
-                :output-to "suggest.js"
+                :output-to "omplete.js"
                 :output-dir "out"
                 :optimizations :none
                 :source-map true}}]})
