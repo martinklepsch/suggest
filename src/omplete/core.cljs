@@ -1,4 +1,4 @@
-(ns suggest-cljs.core
+(ns omplete.core
   (:require [clojure.string :as string]
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]))
@@ -45,7 +45,12 @@
         (om/set-state! owner :active-idx new-index)
         (set-cursor (.-target e) new-cursor)))))
 
-(defn suggest-area [app owner]
+(defn omplete [app owner]
+  ":opts                  passed arguments
+   :input-view            omplete-state
+   :completion-list-view  omplete-state
+   :completion-view
+  "
   (reify
     om/IInitState
     (init-state [_]
@@ -79,7 +84,8 @@
         (dom/textarea #js {:onChange #(handle-change % owner state)
                            :onKeyDown #(handle-tab % owner state)
                            :onBlur #(om/set-state! owner :suggest nil)
-                           :value (:text state)} nil)
+                           :value (:text state)}
+                      nil)
         (when (:suggestions state)
           (apply dom/ul #js {:className "suggestions"
                              :style #js {:-webkit-transform (str "translateX(-" (:offset state) "px)")}}
